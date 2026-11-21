@@ -1,0 +1,33 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>单人盯四端迭代时怎么防漏测：SpecGate 的规则设计与难例复盘 · 杜雷</title><meta name="description" content="把提测前高频踩坑收敛成 11 条确定性规则后，我专门补了 6 个反例测试它的盲区——如实记录哪些修好了、哪些受限于正则仍会漏报或误报。"><link rel="alternate" type="application/rss+xml" title="Du Lei RSS" href="/rss.xml"><script>
+      (function () {
+        const saved = localStorage.getItem('magicui-theme');
+        if (saved === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script><link rel="stylesheet" href="/_astro/BaseLayout.Dno8zotO.css"></head><body><main class="page-shell "><article class="prose"><div class="mono" style="font-size:12px;color:var(--subtle);margin-bottom:10px;">2026-11-04 · 测试左移案例</div><h1>单人盯四端迭代时怎么防漏测：SpecGate 的规则设计与难例复盘</h1><p style="color:var(--muted);font-size:14px;padding-bottom:20px;border-bottom:1px solid var(--border);">把提测前高频踩坑收敛成 11 条确定性规则后，我专门补了 6 个反例测试它的盲区——如实记录哪些修好了、哪些受限于正则仍会漏报或误报。</p><div><h3>一、背景：等代码进了测试环境再点页面，排期根本不够用</h3><p>单人负责 Android 学习平板端、双 Web 后台与服务端版本测试时，如果每次都等提测部署后再从头点一遍找低级漏洞，大量精力都会耗在返工打回上。早期试过把 git diff 直接喂给大模型审代码，但模型口径忽紧忽松，还经常编造不存在的代码行号。</p></div><div><h3>二、SpecGate 的 11 条规则与补上的删除行检测</h3><ul><li>先拆需求契约：从 PRD 梳理状态机流转、权限边界与禁用文案，附 SHA-256 摘要作为核对基准；工具本身不内置任何公司业务词。</li><li>同时检查新增行与删除行：不仅拦新增 @SaIgnore、采信前端状态、无锁扣减、多行空 catch、mapper.updateById 丢弃返回值与平板离线进度覆盖，也拦删除 @PreAuthorize / @Transactional 这类高危改动，每条必带精确文件与行号。</li></ul></div><div><h3>三、补完 6 个难例后的真实成绩单</h3><p>种子样例 4/4 通过只能证明规则能跑通；6 个难例里修好了删除权限注解、多行空 catch 和权限上移类级，但间接局部变量传参、只读 VO 减法误报和跨文件合并逻辑仍受限于单行正则——这些边界我都如实写在了仓库 README 里。</p><pre><code>specgate eval --manifest evals/manifest.json
+# total: 10 (4 seed + 6 hard) | seed: 4/4 | hard: 3/6 | accuracy: 0.70</code></pre></div><div style="margin-top:44px;padding-top:18px;border-top:1px solid var(--border);font-size:13px;"><a href="/essays/" style="color:var(--muted);">← 返回全部复盘与案例</a></div></article></main><!-- MagicUI Floating Bottom Dock --><div class="dock-wrapper" role="navigation" aria-label="Primary Dock"><div class="magic-dock"><a href="/" class="dock-item " aria-label="Home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span class="dock-tooltip">主页</span></a><a href="/projects/" class="dock-item " aria-label="Projects"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg><span class="dock-tooltip">开源项目</span></a><a href="/essays/" class="dock-item active" aria-label="Essays"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg><span class="dock-tooltip">工程复盘</span></a><a href="/resume/" class="dock-item " aria-label="Resume"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M15 8h2"></path><path d="M15 12h2"></path><path d="M7 16h10"></path></svg><span class="dock-tooltip">在线简历</span></a><div class="dock-divider"></div><a href="https://github.com/1dulei" target="_blank" rel="noopener" class="dock-item" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"></path></svg><span class="dock-tooltip">GitHub</span></a><div class="dock-divider"></div><a href="/en/essays/shift-left-diff-gate/" class="dock-item" aria-label="Switch Language"><span class="lang-badge">EN</span><span class="dock-tooltip">English</span></a><button type="button" id="theme-toggle" class="dock-item" aria-label="Toggle Theme"><svg id="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg><svg id="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg><span class="dock-tooltip">明暗主题</span></button></div></div><script>
+      (function () {
+        const btn = document.getElementById('theme-toggle');
+        const sun = document.getElementById('icon-sun');
+        const moon = document.getElementById('icon-moon');
+        function syncIcons() {
+          const isDark = document.documentElement.classList.contains('dark');
+          if (sun && moon) {
+            sun.style.display = isDark ? 'block' : 'none';
+            moon.style.display = isDark ? 'none' : 'block';
+          }
+        }
+        syncIcons();
+        if (btn) {
+          btn.addEventListener('click', function () {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('magicui-theme', isDark ? 'dark' : 'light');
+            syncIcons();
+            btn.blur();
+          });
+        }
+      })();
+    </script></body></html>
