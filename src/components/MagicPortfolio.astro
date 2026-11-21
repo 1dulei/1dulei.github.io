@@ -1,0 +1,805 @@
+---
+import {
+  PROFILE,
+  HERO_TAGS,
+  WORK_EXPERIENCE,
+  EDUCATION,
+  SKILL_GROUPS,
+  PROJECTS,
+  ESSAYS,
+} from '../data/siteData';
+
+export interface Props {
+  lang: 'zh' | 'en';
+}
+
+const { lang } = Astro.props;
+const isEn = lang === 'en';
+const resumeUrl = isEn ? '/en/resume/' : '/resume/';
+const pdfUrl = isEn ? PROFILE.resumePdfEn : PROFILE.resumePdfZh;
+const essaysBase = isEn ? '/en/essays' : '/essays';
+---
+
+<style>
+  /* Hero */
+  .hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  .hero-left {
+    flex: 1;
+  }
+
+  .hero-greeting {
+    font-size: clamp(32px, 6vw, 46px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+    margin: 0 0 12px;
+  }
+
+  .hero-role {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: var(--fg);
+    margin: 0 0 10px;
+  }
+
+  .hero-bio {
+    font-size: 14.8px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .hero-meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    border: 1px solid var(--border);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--accent-green);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+
+  .hero-avatar {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 25%, #3f3f46 0%, #18181b 58%, #09090b 100%);
+    border: 2px solid var(--border);
+    box-shadow: 0 10px 24px -6px rgba(9, 9, 11, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.22);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+
+  .avatar-monogram {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #fafafa;
+    line-height: 1;
+  }
+
+  .avatar-sub {
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #a1a1aa;
+    margin-top: 5px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 560px) {
+    .hero-row {
+      flex-direction: column-reverse;
+      gap: 16px;
+    }
+    .hero-avatar {
+      width: 84px;
+      height: 84px;
+    }
+    .avatar-monogram {
+      font-size: 24px;
+    }
+  }
+
+  /* About */
+  .about-copy {
+    font-size: 14.8px;
+    color: var(--muted);
+    line-height: 1.78;
+    margin: 0;
+  }
+
+  /* Work & Education Timeline Rows */
+  .exp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .exp-item {
+    border-radius: 14px;
+    transition: background-color 0.15s ease;
+  }
+
+  .exp-summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+    padding: 6px 0;
+  }
+
+  .company-avatar {
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    border: 1.5px solid;
+    box-shadow: 0 4px 10px -2px rgba(9, 9, 11, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.32);
+  }
+
+  .exp-main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .exp-top-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .exp-company {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--fg);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .exp-chevron {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--muted);
+    transition: transform 0.2s ease;
+  }
+
+  .exp-item.open .exp-chevron {
+    transform: rotate(90deg);
+  }
+
+  .exp-period {
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .exp-role {
+    font-size: 13px;
+    color: var(--body);
+    margin-top: 2px;
+  }
+
+  .exp-bullets {
+    display: none;
+    margin: 10px 0 6px 60px;
+    padding-left: 16px;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.72;
+  }
+
+  .exp-item.open .exp-bullets {
+    display: block;
+  }
+
+  .exp-bullets li {
+    margin-bottom: 7px;
+  }
+
+  @media (max-width: 560px) {
+    .exp-bullets {
+      margin-left: 12px;
+    }
+  }
+
+  /* Skills */
+  .skill-groups {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 620px) {
+    .skill-groups {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .skill-cat-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--fg);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .skill-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .skill-pill {
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3.5px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+  }
+
+  /* Bento Projects Grid */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .bento-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .bento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--border-strong);
+  }
+
+  .bento-card.featured {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 640px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+    }
+    .bento-card.featured {
+      grid-column: span 1;
+    }
+  }
+
+  .bento-preview {
+    padding: 15px 18px;
+    color: #f4f4f5;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .preview-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 9px;
+  }
+
+  .window-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .window-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.26);
+  }
+
+  .metric-pill-top {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.22);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.38);
+  }
+
+  .preview-code {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.62;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #e4e4e7;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
+  }
+
+  .bento-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .bento-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .bento-title {
+    font-size: 17.5px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+
+  .bento-period {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .bento-tagline {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--body);
+    margin: 4px 0 8px;
+  }
+
+  .bento-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0 0 14px;
+    flex: 1;
+  }
+
+  .bento-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+
+  .bento-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2.5px 8px;
+    border-radius: 5px;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+  }
+
+  .bento-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5.5px 12px;
+    border-radius: 7px;
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    transition: opacity 0.15s ease;
+  }
+
+  .action-btn.secondary {
+    background: var(--tag-bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+  }
+
+  .action-btn:hover {
+    opacity: 0.86;
+  }
+
+  /* Field Notes Timeline */
+  .notes-timeline {
+    position: relative;
+    margin-left: 18px;
+    padding-left: 26px;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .note-node {
+    position: relative;
+  }
+
+  .note-dot {
+    position: absolute;
+    left: -35px;
+    top: 3px;
+    width: 17px;
+    height: 17px;
+    border-radius: 999px;
+    background: var(--bg);
+    border: 2px solid var(--fg);
+  }
+
+  .note-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .note-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    line-height: 1.38;
+  }
+
+  .note-title a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .note-summary {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin: 0 0 8px;
+    line-height: 1.65;
+  }
+
+  .note-read-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: var(--tag-bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+  }
+
+  /* Contact Footer */
+  .contact-box {
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+
+  .contact-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: var(--pill-bg);
+    color: var(--pill-fg);
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .cta-btn.outline {
+    background: var(--card);
+    color: var(--fg);
+    border: 1px solid var(--border-strong);
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+</style>
+
+<!-- 1. Hero -->
+<section class="magic-section delay-1">
+  <div class="hero-row">
+    <div class="hero-left">
+      <h1 class="hero-greeting">
+        {isEn ? `Hi, I'm ${PROFILE.nameEn} 👋` : `你好，我是${PROFILE.nameZh} 👋`}
+      </h1>
+      <p class="hero-role">{isEn ? PROFILE.headlineEn : PROFILE.headlineZh}</p>
+      <p class="hero-bio">{isEn ? PROFILE.heroBioEn : PROFILE.heroBioZh}</p>
+      <div class="hero-meta-pills">
+        <span class="meta-chip">
+          <span class="status-dot"></span>
+          {isEn ? PROFILE.locationEn : `${PROFILE.locationZh} · 8年测试经验`}
+        </span>
+        {HERO_TAGS.map((tag) => (
+          <span class="meta-chip">{isEn ? tag.en : tag.zh}</span>
+        ))}
+      </div>
+    </div>
+    <div class="hero-avatar" aria-label={isEn ? PROFILE.nameEn : PROFILE.nameZh}>
+      {PROFILE.hasCustomAvatar ? (
+        <img src={PROFILE.avatarPath} alt={isEn ? PROFILE.nameEn : PROFILE.nameZh} />
+      ) : (
+        <>
+          <span class="avatar-monogram">{PROFILE.initials}</span>
+          <span class="avatar-sub">QA · AI</span>
+        </>
+      )}
+    </div>
+  </div>
+</section>
+
+<!-- 2. About -->
+<section class="magic-section delay-2">
+  <h2 class="section-title">{isEn ? 'About Me' : '关于我'}</h2>
+  <p class="about-copy">{isEn ? PROFILE.aboutEn : PROFILE.aboutZh}</p>
+</section>
+
+<!-- 3. Work Experience -->
+<section class="magic-section delay-3">
+  <h2 class="section-title">{isEn ? 'Work Experience' : '工作经历'}</h2>
+  <div class="exp-list">
+    {WORK_EXPERIENCE.map((job, idx) => (
+      <div class={`exp-item ${idx === 0 ? 'open' : ''}`} data-exp-item>
+        <div class="exp-summary" data-exp-toggle>
+          <div
+            class="company-avatar"
+            style={`background:${job.badgeGradient};border-color:${job.badgeBorder};color:${job.badgeColor};`}
+          >
+            {job.badgeText}
+          </div>
+          <div class="exp-main">
+            <div class="exp-top-line">
+              <span class="exp-company">
+                {isEn ? job.companyEn : job.companyZh}
+                <span class="exp-chevron">›</span>
+              </span>
+              <span class="exp-period">{isEn ? job.periodEn : job.periodZh}</span>
+            </div>
+            <div class="exp-role">{isEn ? job.roleEn : job.roleZh}</div>
+          </div>
+        </div>
+        <ul class="exp-bullets">
+          {(isEn ? job.bulletsEn : job.bulletsZh).map((b) => (
+            <li>{b}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- 4. Education -->
+<section class="magic-section delay-4">
+  <h2 class="section-title">{isEn ? 'Education' : '教育背景'}</h2>
+  <div class="exp-list">
+    {EDUCATION.map((edu) => (
+      <div class="exp-summary" style="cursor:default;">
+        <div
+          class="company-avatar"
+          style={`background:${edu.badgeGradient};border-color:${edu.badgeBorder};color:${edu.badgeColor};`}
+        >
+          {edu.badgeText}
+        </div>
+        <div class="exp-main">
+          <div class="exp-top-line">
+            <span class="exp-company">{isEn ? edu.schoolEn : edu.schoolZh}</span>
+            <span class="exp-period">{edu.period}</span>
+          </div>
+          <div class="exp-role">{isEn ? edu.degreeEn : edu.degreeZh}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- 5. Skills -->
+<section class="magic-section delay-4">
+  <h2 class="section-title">{isEn ? 'QA Competencies & Tooling' : '核心测试能力栈'}</h2>
+  <div class="skill-groups">
+    {SKILL_GROUPS.map((grp) => (
+      <div class="skill-card">
+        <div class="skill-cat-title">{isEn ? grp.categoryEn : grp.categoryZh}</div>
+        <div class="skill-pills">
+          {(isEn ? grp.itemsEn : grp.itemsZh).map((skill) => (
+            <span class="skill-pill">{skill}</span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- 6. Bento Projects -->
+<section class="magic-section delay-5" id="projects">
+  <div class="section-header-center">
+    <span class="section-pill">{isEn ? 'Open-Source QA Tools' : '开源代表作'}</span>
+    <h2>{isEn ? 'Practical Guardrails Built from Real Bugs' : '从日常漏测痛点沉淀的三套测试工具'}</h2>
+    <p>
+      {isEn
+        ? 'Personal open-source tools re-implemented from real QA pain points—covering LLM feature release checks, pre-QA diff risk scans, and semantic browser/API probing.'
+        : '基于日常多端测试与 AI 业务验收中的真实痛点，脱敏后独立实现的个人开源测试工具。'}
+    </p>
+  </div>
+
+  <div class="bento-grid">
+    {PROJECTS.map((proj, idx) => (
+      <article class={`bento-card ${idx === 0 ? 'featured' : ''}`}>
+        <div class="bento-preview" style={`background:${proj.gradient};`}>
+          <div class="preview-topbar">
+            <div class="window-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="metric-pill-top">
+              {isEn ? proj.metricBadgeEn : proj.metricBadgeZh}
+            </span>
+          </div>
+          <pre class="preview-code">{isEn ? proj.previewEn : proj.previewZh}</pre>
+        </div>
+
+        <div class="bento-body">
+          <div class="bento-title-row">
+            <h3 class="bento-title">{proj.name}</h3>
+            <span class="bento-period">{proj.period}</span>
+          </div>
+          <div class="bento-tagline">{isEn ? proj.taglineEn : proj.taglineZh}</div>
+          <p class="bento-desc">{isEn ? proj.summaryEn : proj.summaryZh}</p>
+
+          <div class="bento-tags">
+            {(isEn ? proj.stackEn : proj.stackZh).map((t) => (
+              <span class="bento-tag">{t}</span>
+            ))}
+          </div>
+
+          <div class="bento-actions">
+            <a href={proj.demoUrl} target="_blank" rel="noopener" class="action-btn">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              {isEn ? 'Live Report' : '查看实测报告'}
+            </a>
+            <a href={proj.repoUrl} target="_blank" rel="noopener" class="action-btn secondary">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<!-- 7. Engineering Field Notes -->
+<section class="magic-section delay-6">
+  <div class="section-header-center">
+    <span class="section-pill">{isEn ? 'QA Field Notes' : '测试实战复盘'}</span>
+    <h2>{isEn ? 'Lessons from Daily Delivery' : '踩坑记录与防漏测思考'}</h2>
+    <p>
+      {isEn
+        ? 'Candid notes on what failed in real sprints and the practical testing workflows that survived.'
+        : '记录真实版本迭代里走过的弯路、放弃过的重型架子，以及最终在日常交付里跑通的务实做法。'}
+    </p>
+  </div>
+
+  <div class="notes-timeline">
+    {ESSAYS.map((essay) => (
+      <div class="note-node">
+        <span class="note-dot"></span>
+        <div class="note-meta mono">
+          {essay.date} · {isEn ? essay.kindEn : essay.kindZh} · {isEn ? essay.readTimeEn : essay.readTimeZh}
+        </div>
+        <h3 class="note-title">
+          <a href={`${essaysBase}/${essay.slug}/`}>
+            {isEn ? essay.titleEn : essay.titleZh}
+          </a>
+        </h3>
+        <p class="note-summary">{isEn ? essay.summaryEn : essay.summaryZh}</p>
+        <a href={`${essaysBase}/${essay.slug}/`} class="note-read-link">
+          {isEn ? 'Read Note →' : '阅读全文 →'}
+        </a>
+      </div>
+    ))}
+  </div>
+</section>
+
+<!-- 8. Contact & Resume CTA -->
+<section class="magic-section delay-6">
+  <div class="contact-box">
+    <span class="section-pill">{isEn ? 'Resume & Contact' : '简历与联系'}</span>
+    <h2 style="font-size:clamp(26px,4.5vw,34px);font-weight:800;letter-spacing:-0.03em;margin:8px 0 10px;">
+      {isEn ? 'Get in Touch' : '欢迎交流与工作机会沟通'}
+    </h2>
+    <p style="color:var(--muted);font-size:14.5px;max-width:490px;margin:0 auto;">
+      {isEn
+        ? `Available for Senior QA Engineer & AI Quality roles in Beijing. Email: ${PROFILE.email}`
+        : `目前关注北京地区高级测试工程师 / AI 质量与多端测试方向机会。联系邮箱：${PROFILE.email}`}
+    </p>
+    <div class="contact-actions">
+      <a href={resumeUrl} class="cta-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        {isEn ? 'Online Resume' : '查看在线简历'}
+      </a>
+      <a href={pdfUrl} download class="cta-btn outline">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        {isEn ? 'Download 1-Page PDF' : '下载单页 PDF 简历'}
+      </a>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  document.querySelectorAll('[data-exp-toggle]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      const parent = el.closest('[data-exp-item]');
+      if (parent) parent.classList.toggle('open');
+    });
+  });
+</script>

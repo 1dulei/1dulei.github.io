@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ESSAYS } from '../../../data/siteData';
+---
+
+<BaseLayout
+  title="Field Notes · Du Lei"
+  description="Architecture retrospectives on shift-left quality gates, passive browser telemetry, and LLM evaluation."
+  lang="en"
+  currentPath="/essays"
+  switchHref="/essays/"
+>
+  <div class="prose">
+    <span class="section-pill">Engineering Field Notes</span>
+    <h1>Field Notes &amp; Case Studies</h1>
+    <p style="color:var(--muted);">
+      Candid retrospectives on multi-platform quality bottlenecks, dead-end UI frameworks, and deterministic release gates that survived in production.
+    </p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;margin-top:28px;">
+    {ESSAYS.map((e) => (
+      <a
+        href={`/en/essays/${e.slug}/`}
+        style="display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;box-shadow:var(--card-shadow);transition:border-color 0.15s ease;"
+      >
+        <div class="mono" style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+          {e.date} · {e.kindEn} · {e.readTimeEn}
+        </div>
+        <h2 style="margin:0 0 8px;font-size:18px;font-weight:700;line-height:1.35;">{e.titleEn}</h2>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">{e.summaryEn}</p>
+      </a>
+    ))}
+  </div>
+</BaseLayout>

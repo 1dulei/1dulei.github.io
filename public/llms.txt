@@ -1,0 +1,19 @@
+# Du Lei (杜雷) — Senior QA Engineer · AI Quality Engineering & Multi-Platform Test Architecture
+
+> Beijing, China · 8+ years in Multi-Platform Software QA (51Talk → Longfor Group → Hongben Tech)
+> Email: a1437699690@163.com · GitHub: https://github.com/1dulei · Site: https://1dulei.github.io
+
+## Core Focus
+Practical, low-maintenance quality engineering across Android learning tablets, web admin consoles, backend APIs, and educational AI features.
+
+## Personal Open-Source QA Tools (Desensitized)
+- EvalGate (https://github.com/1dulei/evalgate): Zero-dependency Python 3.10+ release-gate evaluation harness for LLM features with deterministic assertions, optional LLM-as-judge contradiction checks, and ordered red-team leak/refusal checks.
+- SpecGate (https://github.com/1dulei/specgate): Zero-dependency Python 3.11 pre-QA PRD contract extractor (SHA-256 digest, non_executable) and unified diff risk scanner covering 11 rules across added and removed lines (4 seed + 6 hard benchmark cases with documented limitations).
+- TracePilot (https://github.com/1dulei/tracepilot): Playwright browser flow probe using semantic locators with component-library fallbacks, popup tab capture, and configurable passive API/localStorage security checks.
+
+## Key Routes
+- / : Personal Portfolio (Chinese)
+- /en/ : Personal Portfolio (English)
+- /projects/ : Open-Source QA Tools & Demo Reports
+- /essays/ : Production Case Studies & Retrospectives
+- /resume/ : Online Resume & 1-Page Downloadable PDF

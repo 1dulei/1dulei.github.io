@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { ESSAYS } from '../../../data/siteData';
+
+export function getStaticPaths() {
+  return ESSAYS.map((essay) => ({
+    params: { slug: essay.slug },
+    props: { essay },
+  }));
+}
+
+const { essay } = Astro.props;
+---
+
+<BaseLayout
+  title={`${essay.titleEn} · Du Lei`}
+  description={essay.summaryEn}
+  lang="en"
+  currentPath="/en/essays"
+  switchHref={`/essays/${essay.slug}/`}
+>
+  <article class="prose">
+    <div class="mono" style="font-size:12px;color:var(--subtle);margin-bottom:10px;">
+      {essay.date} · {essay.kindEn}
+    </div>
+    <h1>{essay.titleEn}</h1>
+    <p style="color:var(--muted);font-size:14px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+      {essay.summaryEn}
+    </p>
+
+    {essay.paragraphsEn.map((sec) => (
+      <div>
+        {sec.heading && <h3>{sec.heading}</h3>}
+        {sec.body && <p>{sec.body}</p>}
+        {sec.bullets && (
+          <ul>
+            {sec.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        )}
+        {sec.code && (
+          <pre><code>{sec.code}</code></pre>
+        )}
+      </div>
+    ))}
+
+    <div style="margin-top:44px;padding-top:18px;border-top:1px solid var(--border);font-size:13px;">
+      <a href="/en/essays/" style="color:var(--muted);">← Back to all essays</a>
+    </div>
+  </article>
+</BaseLayout>

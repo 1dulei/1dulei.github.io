@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROJECTS } from '../data/siteData';
+---
+
+<BaseLayout
+  title="开源测试工具 · 杜雷"
+  description="EvalGate、SpecGate 与 TracePilot：基于日常多端测试痛点脱敏实现的个人开源测试工具。"
+  lang="zh-CN"
+  currentPath="/projects"
+  switchHref="/en/projects/"
+>
+  <div class="prose">
+    <span class="section-pill">Open-Source QA Tools</span>
+    <h1>开源测试工具矩阵</h1>
+    <p style="color:var(--muted);">
+      把 8 年多端版本测试与自研 AI 功能验收中反复遇到的漏测痛点，收敛为三套轻量、零冗余、日常真能跑起来的确定性测试工具。
+    </p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:24px;margin-top:28px;">
+    {PROJECTS.map((p) => (
+      <article style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow);">
+        <div style={`background:${p.gradient};padding:18px 22px;color:#e4e4e7;`}>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+            <span class="mono" style="font-size:13px;font-weight:700;color:#fff;">{p.name} · {p.period}</span>
+            <span style="font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;background:rgba(16,185,129,0.22);color:#6ee7b7;border:1px solid rgba(16,185,129,0.38);">
+              {p.metricBadgeZh}
+            </span>
+          </div>
+          <pre style="margin:0;font-size:12.5px;line-height:1.62;white-space:pre-wrap;color:#e4e4e7;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',monospace;">{p.previewZh}</pre>
+        </div>
+        <div style="padding:20px 22px;">
+          <h2 style="margin:0 0 6px;font-size:20px;font-weight:800;">{p.name} — {p.taglineZh}</h2>
+          <p style="margin:0 0 14px;font-size:14px;color:var(--muted);">{p.summaryZh}</p>
+          <ul style="margin:0 0 16px;padding-left:18px;font-size:14px;color:var(--body);line-height:1.7;">
+            {p.highlightsZh.map((h) => (
+              <li style="margin-bottom:6px;">{h}</li>
+            ))}
+          </ul>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">
+            {p.stackZh.map((s) => (
+              <span style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;background:var(--tag-bg);color:var(--tag-fg);">{s}</span>
+            ))}
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href={p.demoUrl} target="_blank" rel="noopener" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;background:var(--pill-bg);color:var(--pill-fg);">
+              查看交互式实测报告 ↗
+            </a>
+            <a href={p.repoUrl} target="_blank" rel="noopener" style="font-size:12px;font-weight:600;padding:6px 14px;border-radius:8px;background:var(--tag-bg);color:var(--fg);border:1px solid var(--border);">
+              GitHub 源码仓库 ↗
+            </a>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</BaseLayout>

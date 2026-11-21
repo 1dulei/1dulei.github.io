@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpecGate Audit · 学员积分商城实物兑换需求文档（v1.6）</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #0D0E11;
+      color: #EDEDEF;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 48px 24px 72px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .top { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid #1E2028; padding-bottom: 20px; margin-bottom: 28px; }
+    .badge { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid #EF4444; color: #EF4444; }
+    h1 { font-size: 22px; margin: 0 0 6px; font-weight: 600; letter-spacing: -0.01em; }
+    h2 { font-size: 14px; color: #8A8F98; text-transform: uppercase; letter-spacing: 0.06em; margin: 36px 0 14px; font-weight: 600; }
+    .meta { color: #8A8F98; font-size: 13px; }
+    .summary-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat { background: #12141A; border: 1px solid #1E2028; border-radius: 6px; padding: 12px 14px; }
+    .stat-label { font-size: 12px; color: #7E848E; }
+    .stat-val { font-size: 18px; font-weight: 600; margin-top: 2px; }
+    .reason { background: #12141A; border-left: 3px solid #EF4444; padding: 12px 16px; font-size: 13px; color: #D4D7DD; margin-bottom: 8px; }
+    .row-item { border-top: 1px solid #1E2028; padding: 16px 0; }
+    .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+    .sev { font-size: 11px; font-weight: 700; padding: 1px 6px; border: 1px solid; border-radius: 4px; margin-right: 6px; }
+    .rule { color: #8A8F98; font-size: 12px; margin-right: 6px; }
+    .loc { color: #7E848E; font-size: 12px; }
+    .desc { margin: 8px 0; font-size: 13px; color: #A0A6B1; }
+    .code { background: #13151C; border: 1px solid #222631; border-radius: 4px; padding: 8px 12px; font-size: 12px; overflow-x: auto; color: #E2E8F0; margin: 8px 0; }
+    .fix { font-size: 12px; color: #10B981; }
+    .assertions { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: #C5CAD3; }
+    .footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid #1E2028; display: flex; justify-content: space-between; font-size: 12px; color: #62666D; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>学员积分商城实物兑换需求文档（v1.6）</h1>
+        <div class="meta mono">contract=2133370c1913 · audit=b4869c1f27fe · files=3</div>
+      </div>
+      <span class="badge mono">BLOCKED</span>
+    </div>
+
+    <div class="summary-bar mono">
+      <div class="stat"><div class="stat-label">P0 Blocker</div><div class="stat-val" style="color:#EF4444">2</div></div>
+      <div class="stat"><div class="stat-label">P1 Critical</div><div class="stat-val" style="color:#F97316">3</div></div>
+      <div class="stat"><div class="stat-label">P2 Warning</div><div class="stat-val" style="color:#EAB308">1</div></div>
+      <div class="stat"><div class="stat-label">Spec Scenarios</div><div class="stat-val">4</div></div>
+    </div>
+
+    <div class="reason">检测到 2 个 P0 阻断级风险与 3 个 P1 高危代码缺陷，违反准出红线。</div>
+
+    <h2>Evidence-Bound Diff Findings (6)</h2>
+    
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#EF4444;border-color:#EF444440">P0</span>
+                      <span class="mono rule">SG-AUTH-001</span>
+                      <strong>新增接口或路由存在免鉴权放行风险</strong>
+                    </div>
+                    <span class="mono loc">edukids-mall-service/src/main/java/com/edukids/mall/controller/StudentMallController.java:18</span>
+                  </div>
+                  <p class="desc">检测到 @SaIgnore 或显式鉴权豁免，未登录或低权限调用方可能直接触发业务接口。</p>
+                  <pre class="code">@SaIgnore</pre>
+                  <div class="fix">修复建议：移除免鉴权注解，将新路由前缀纳入认证拦截器与 @PreAuthorize 权限点校验。</div>
+                </div>
+                
+
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#F97316;border-color:#F9731640">P1</span>
+                      <span class="mono rule">SG-CONC-004</span>
+                      <strong>内存计算扣减余额/库存后直接覆盖写库，存在并发超扣风险</strong>
+                    </div>
+                    <span class="mono loc">edukids-mall-service/src/main/java/com/edukids/mall/service/impl/MallServiceImpl.java:44</span>
+                  </div>
+                  <p class="desc">采用先查后减再写回模式且未见行锁、乐观锁版本号或受影响行数校验，高并发下会导致超兑或负值。</p>
+                  <pre class="code">account.setPoints(account.getPoints() - req.getCostPoints());</pre>
+                  <div class="fix">修复建议：改用数据库条件原子扣减（WHERE id = ? AND points &gt;= ?）并校验受影响行数 == 1，配合完整回滚事务。</div>
+                </div>
+                
+
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#F97316;border-color:#F9731640">P1</span>
+                      <span class="mono rule">SG-ERR-005</span>
+                      <strong>静默吞异常或未校验数据库更新受影响行数</strong>
+                    </div>
+                    <span class="mono loc">edukids-mall-service/src/main/java/com/edukids/mall/service/impl/MallServiceImpl.java:45</span>
+                  </div>
+                  <p class="desc">异常被空 catch 吞没或 updateById 返回 0 行时未抛错中断，会导致数据未落库但接口返回成功。</p>
+                  <pre class="code">updateById(account);</pre>
+                  <div class="fix">修复建议：校验更新返回值并在 0 行命中时抛出业务异常触发事务回滚，记录结构化错误日志。</div>
+                </div>
+                
+
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#EF4444;border-color:#EF444440">P0</span>
+                      <span class="mono rule">SG-TRUST-002</span>
+                      <strong>服务端直接采信客户端上报的业务状态字段</strong>
+                    </div>
+                    <span class="mono loc">edukids-mall-service/src/main/java/com/edukids/mall/service/impl/MallServiceImpl.java:47</span>
+                  </div>
+                  <p class="desc">直接将请求体中的状态字段写入实体，攻击者或异常客户端可伪造终态绕过服务端流程校验。</p>
+                  <pre class="code">order.setStatus(req.getStatus());</pre>
+                  <div class="fix">修复建议：忽略客户端传入的目标状态，根据数据库当前状态机与服务端实际核验结果计算下一状态。</div>
+                </div>
+                
+
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#F97316;border-color:#F9731640">P1</span>
+                      <span class="mono rule">SG-ERR-005</span>
+                      <strong>静默吞异常或未校验数据库更新受影响行数</strong>
+                    </div>
+                    <span class="mono loc">edukids-mall-service/src/main/java/com/edukids/mall/service/impl/MallServiceImpl.java:50</span>
+                  </div>
+                  <p class="desc">异常被空 catch 吞没或 updateById 返回 0 行时未抛错中断，会导致数据未落库但接口返回成功。</p>
+                  <pre class="code">} catch (Exception e) {}</pre>
+                  <div class="fix">修复建议：校验更新返回值并在 0 行命中时抛出业务异常触发事务回滚，记录结构化错误日志。</div>
+                </div>
+                
+
+                <div class="row-item">
+                  <div class="row-head">
+                    <div>
+                      <span class="sev" style="color:#EAB308;border-color:#EAB30840">P2</span>
+                      <span class="mono rule">SG-COPY-009</span>
+                      <strong>端侧代码触碰禁用文案红线（「校区」）</strong>
+                    </div>
+                    <span class="mono loc">edukids-student-app/src/views/student/MallRedeemDialog.vue:11</span>
+                  </div>
+                  <p class="desc">在面向学生/C 端的模块代码中检测到禁用词「校区」，违反产品端侧文案隔离规范。</p>
+                  <pre class="code">兑换成功后请联系所属校区老师领取礼盒</pre>
+                  <div class="fix">修复建议：将面向学生端的展示文案替换为合规表述，移除「校区」相关字样。</div>
+                </div>
+                
+
+    <h2>Shift-Left Spec Contract (4)</h2>
+    
+        <div class="row-item">
+          <div class="row-head">
+            <span><span class="mono rule">SC-001</span> <strong>非法状态逆向跃迁与重复提交拦截（待兑换 -&gt; 已兑换 -&gt; 已回退）</strong></span>
+            <span class="mono loc">L3_API · P0</span>
+          </div>
+          <p class="desc">触发：重放前置状态变更请求或伪造客户端状态字段直接调用提交接口</p>
+          <ul class="assertions">
+            <li>服务端必须基于数据库当前状态校验合法迁移路径，拒绝客户端传入的目标状态覆盖</li><li>返回明确业务错误码，数据库状态与关联流水保持不变</li>
+          </ul>
+        </div>
+        
+
+        <div class="row-item">
+          <div class="row-head">
+            <span><span class="mono rule">SC-002</span> <strong>并发扣减与异常回补事务一致性校验</strong></span>
+            <span class="mono loc">L3_API_DB · P0</span>
+          </div>
+          <p class="desc">触发：并发触发兑换/下单或在中途模拟下游发放失败触发回滚</p>
+          <ul class="assertions">
+            <li>至多 1 笔请求成功，其余请求明确失败且不产生超扣或负库存</li><li>下游失败时主事务完整回滚，不存在静默吞异常或 0 行更新误判成功</li>
+          </ul>
+        </div>
+        
+
+        <div class="row-item">
+          <div class="row-head">
+            <span><span class="mono rule">SC-003</span> <strong>接口鉴权覆盖与响应体敏感字段脱敏核查</strong></span>
+            <span class="mono loc">L3_SECURITY · P0</span>
+          </div>
+          <p class="desc">触发：调用新增业务路由并检查列表/详情 JSON 响应字段及本地存储</p>
+          <ul class="assertions">
+            <li>新增路由前缀必须纳入认证过滤器保护，严禁遗留未受控免鉴权注解</li><li>响应 DTO 不得返回 password、payPwd 等敏感字段，前端记住密码不得明文落盘 localStorage</li>
+          </ul>
+        </div>
+        
+
+        <div class="row-item">
+          <div class="row-head">
+            <span><span class="mono rule">SC-004</span> <strong>端侧文案红线扫描（严禁出现：校区）</strong></span>
+            <span class="mono loc">L1_L2_UI · P1</span>
+          </div>
+          <p class="desc">触发：扫描前端模板、国际化词条与接口返回提示文案</p>
+          <ul class="assertions">
+            <li>用户可见界面与错误提示中绝对不包含禁用文案内容（校区）</li>
+          </ul>
+        </div>
+        
+
+    <div class="footer mono">
+      <span>SpecGate v0.3.0 · Non-Executable Spec + Evidence-Bound Gate</span>
+      <span>verdict_sha256=ac25b0ed61cd0c88</span>
+    </div>
+  </div>
+</body>
+</html>

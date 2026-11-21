@@ -1,0 +1,390 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROFILE } from '../data/siteData';
+---
+
+<BaseLayout
+  title="简历 · 杜雷 — 高级测试工程师 · AI 质量工程与多端测试架构"
+  description="杜雷 8 年多端软件质量保障与 AI 功能评测简历（51Talk、龙湖集团、红本科技）。"
+  lang="zh-CN"
+  currentPath="/resume"
+  switchHref="/en/resume/"
+  wide={true}
+>
+  <style>
+    .resume-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .toolbar-note {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .toolbar-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .r-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: var(--pill-bg);
+      color: var(--pill-fg);
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .r-btn.ghost {
+      background: var(--card);
+      color: var(--fg);
+      border-color: var(--border-strong);
+    }
+
+    .a4-sheet {
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 38px 44px;
+      box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.1);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.52;
+    }
+
+    html.dark .a4-sheet {
+      background: #131316;
+      color: #f4f4f5;
+      border-color: #27272a;
+      box-shadow: 0 18px 42px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    .r-header {
+      border-bottom: 2px solid #111827;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    html.dark .r-header {
+      border-bottom-color: #e4e4e7;
+    }
+
+    .r-name {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .r-target {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-top: 4px;
+    }
+
+    html.dark .r-target {
+      color: #60a5fa;
+    }
+
+    .r-contact {
+      text-align: right;
+      font-size: 12px;
+      color: #4b5563;
+      line-height: 1.62;
+    }
+
+    html.dark .r-contact {
+      color: #a1a1aa;
+    }
+
+    .r-contact a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .r-sec {
+      margin-bottom: 14px;
+    }
+
+    .r-sec-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid #d1d5db;
+      padding-bottom: 3px;
+      margin: 0 0 8px;
+    }
+
+    html.dark .r-sec-title {
+      border-bottom-color: #2e2e34;
+    }
+
+    .r-summary {
+      font-size: 12.5px;
+      color: #374151;
+      margin: 0;
+      text-align: justify;
+    }
+
+    html.dark .r-summary {
+      color: #d4d4d8;
+    }
+
+    .r-skill-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 12.3px;
+      color: #374151;
+    }
+
+    html.dark .r-skill-list {
+      color: #d4d4d8;
+    }
+
+    .r-skill-list li {
+      margin-bottom: 4px;
+    }
+
+    .r-entry {
+      margin-bottom: 11px;
+    }
+
+    .r-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .r-org {
+      font-weight: 800;
+    }
+
+    .r-role {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    html.dark .r-role {
+      color: #d4d4d8;
+    }
+
+    .r-date {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      font-variant-numeric: tabular-nums;
+    }
+
+    html.dark .r-date {
+      color: #a1a1aa;
+    }
+
+    .r-bullets {
+      margin: 4px 0 0;
+      padding-left: 16px;
+      font-size: 12.2px;
+      color: #374151;
+    }
+
+    html.dark .r-bullets {
+      color: #d4d4d8;
+    }
+
+    .r-bullets li {
+      margin-bottom: 3.5px;
+    }
+
+    @media (max-width: 640px) {
+      .a4-sheet {
+        padding: 22px 18px;
+      }
+      .r-contact {
+        text-align: left;
+      }
+    }
+
+    @media print {
+      .resume-toolbar {
+        display: none !important;
+      }
+      .a4-sheet {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        background: #fff !important;
+        color: #111827 !important;
+      }
+    }
+  </style>
+
+  <div class="resume-toolbar">
+    <span class="toolbar-note">
+      网页公开版已隐藏完整手机号；右侧下载的单页投递版 PDF 包含完整电话与个人信息。
+    </span>
+    <div class="toolbar-btns">
+      <a href={PROFILE.resumePdfZh} download class="r-btn">
+        ↓ 下载投递版单页 PDF（含电话）
+      </a>
+      <a href="/en/resume/" class="r-btn ghost">
+        English Resume →
+      </a>
+    </div>
+  </div>
+
+  <article class="a4-sheet">
+    <header class="r-header">
+      <div>
+        <h1 class="r-name">杜 雷</h1>
+        <div class="r-target">高级测试工程师 · AI 质量工程与多端测试架构</div>
+      </div>
+      <div class="r-contact">
+        <div>男 · 28岁（1998） ｜ 8年测试经验 ｜ 北京（完整电话见投递版 PDF）</div>
+        <div>
+          邮箱：<a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a> ｜
+          GitHub：<a href={PROFILE.githubUrl} target="_blank" rel="noopener">github.com/1dulei</a> ｜
+          个人站：<a href={PROFILE.siteUrl} target="_blank" rel="noopener">{PROFILE.siteHost}</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">个人概述</h2>
+      <p class="r-summary">
+        <strong>8 年多端软件质量保障与测试体系建设经验</strong>（51Talk → 龙湖集团 → 红本科技），具备从 0 到 1 独立搭建四端（Android 智能学习平板端 / 双 Web 后台 / 服务端）全流程质量保障体系及 AI 业务上线验收实战能力。注重<strong>务实防漏测与低维护落地</strong>，并将工作中反复遇到的提测期漏洞、UI 脚本脆弱与提示词退化痛点，脱敏后独立实现为三套轻量开源测试工具（<strong>SpecGate</strong> / <strong>TracePilot</strong> / <strong>EvalGate</strong>）。
+      </p>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">核心测试能力</h2>
+      <ul class="r-skill-list">
+        <li><strong>AI 功能评测与提效落地：</strong>熟悉自研问答智能体（Agent）与 AI 生图业务专项测试；掌握回答忠实度（防幻觉超纲）核查、少儿内容合规与敏感词过滤测试、防提示词套取/越狱红队测试及 Prompt 变更退化回归对比；熟练运用大模型辅助需求盲区拆解与测试提效。</li>
+        <li><strong>多端测试架构与测试左移：</strong>精通 Web 管理台、Android/iOS 客户端与服务端全链路测试策略设计、复杂状态机与权限边界挖掘；具备提测分支代码 Diff 风险走读能力，擅长建立版本准入准出质量门禁与线上缺陷防漏测复盘机制。</li>
+        <li><strong>接口、数据与移动端专项：</strong>熟练开展 RESTful 接口深度测试（角色越权、幂等防重、异常容错、假 200 拦截）；熟练使用 <strong>Charles / Mitmproxy</strong> 抓包改包与弱网模拟、<strong>MySQL</strong> 复杂查询与落库一致性核查、<strong>Redis</strong> 缓存校验，以及 <strong>Android ADB / Monkey</strong>、Crash/ANR 日志定位与离线同步测试。</li>
+        <li><strong>自动化巡检与工程工具：</strong>熟练使用 <strong>Python、Playwright、Pytest</strong> 编写高稳定度巡检与接口验证工具（零定位符维护、后台接口敏感外泄监听）；熟悉 Linux 日志排查、Git 及 GitHub Actions / GitLab CI 自动化流水线集成。</li>
+      </ul>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">工作经历</h2>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">红本科技</span> ·
+            <span class="r-role">高级测试工程师 / 多端质量与 AI 评测负责人</span>
+          </div>
+          <span class="r-date">2022.05 — 至今 · 北京</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>从 0 到 1 搭建四端质量体系：</strong>独立统筹 Android 智能学习平板端、学管与运管双 Web 管理后台及服务端质量交付，制定提测准入标准、分级核心回归基线与上线准出机制，支撑百余次版本迭代平稳上线，显著收敛线上高危缺陷逃逸。</li>
+          <li><strong>自研 AI 问答与生图功能专项验收：</strong>负责公司自研教育问答助手及 <strong>AI 生图</strong>业务上线把关，围绕教材知识点准确性（防超纲编造）、少儿内容安全红线、生图敏感词过滤与防越狱套话设计专项回归用例，阻断提示词微调引发的隐蔽退化。</li>
+          <li><strong>测试左移与提测前风险走读：</strong>将质量介入前移至需求评审与提测环节，提前梳理状态流转、角色权限与禁用文案边界，结合代码分支 diff 核查在进测试环境前拦截免鉴权遗留、并发重复扣减及学习平板离线新进度被旧快照覆盖等高危隐患，显著减少返工与回归耗时。</li>
+          <li><strong>核心链路巡检与接口抓包核查：</strong>针对前端样式变动导致脚本易碎及 UI 断言盲区，采用语义定位优先的浏览器巡检并配合抓包审计接口负载与本地存储，捕获接口泄露 <code>payPwd</code> 等敏感字段及 <code>HTTP 200</code> 掩盖业务报错等隐患。</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">龙湖集团</span> ·
+            <span class="r-role">测试工程师</span>
+          </div>
+          <span class="r-date">2020.04 — 2022.05 · 北京</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>全流程版本质量交付：</strong>负责集团业务系统 Web 管理端与移动端 App 日常迭代测试，参与需求评审、测试计划与方案制定、用例编写评审及版本上线准出把控。</li>
+          <li><strong>接口联调与数据核查：</strong>针对核心业务链路开展前后端接口测试（正向流、边界值、权限校验与异常容错），结合 Charles 抓包改包与 MySQL 数据库落库核查精准定位缺陷归属。</li>
+          <li><strong>回归基线沉淀与线上跟进：</strong>组织跨端集成回归测试与线上问题复盘跟进，持续完善核心业务回归基线用例库，保障各阶段版本按期高质量交付。</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">51Talk 无忧英语</span> ·
+            <span class="r-role">测试工程师</span>
+          </div>
+          <span class="r-date">2018.05 — 2020.04 · 北京</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>实时互动在线教室测试：</strong>负责 1v1 及小班互动课堂客户端（Android / iOS / Web）核心教学流程、双向白板信令同步、动态课件交互及音视频通话稳定性测试。</li>
+          <li><strong>弱网专项与兼容性治理：</strong>开展高丢包、延迟抖动、断网重连等弱网模拟测试及 40+ 主流移动机型兼容回归，配合研发采集日志定位修复客户端 Crash / ANR 问题，保障线上课堂低崩溃率运行。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">个人开源测试工具（基于实战痛点脱敏实现）</h2>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">EvalGate</span> ·
+            <span class="r-role">大模型功能上线评测与红队检查工具（Python 3.10+ 零依赖）</span>
+          </div>
+          <span class="r-date">github.com/1dulei/evalgate</span>
+        </div>
+        <ul class="r-bullets">
+          <li>面向教育问答助手与 AI 生图等脱敏场景，提供确定性断言、可选 <code>llm_judge</code> 逻辑矛盾复核（未配置标为跳过不算通过）、按“泄露优先于拒绝”顺序判定的红队检查与版本对比（<code>evalgate diff</code>）；含 11 项单测（覆盖 6 条自查发现的判错 bug 回归）。</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">SpecGate &amp; TracePilot</span> ·
+            <span class="r-role">提测前 Diff 风险检查 + 浏览器语义巡检与后台被动接口检查</span>
+          </div>
+          <span class="r-date">github.com/1dulei</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>SpecGate：</strong>从 PRD 提取带 SHA-256 摘要的非可执行契约；11 条规则同时扫 diff 新增与删除行（含删除权限/事务注解、多行空 catch、离线覆盖），10 例评测集（4 种子全过 / 6 难例 3 过）并公开已知局限。<strong>TracePilot：</strong>用例不写 CSS/XPath，语义定位优先 + 组件兼容降级并接管新页签，后台被动检查可配置敏感字段与假 200（7 项测试通过）。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-sec" style="margin-bottom:0;">
+      <h2 class="r-sec-title">教育背景</h2>
+      <div class="r-entry" style="margin-bottom:4px;">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">兰州资源环境职业技术大学</span> ·
+            <span class="r-role">人工智能工程技术 · 本科（在读）</span>
+          </div>
+          <span class="r-date">2026.03 — 2028.06</span>
+        </div>
+      </div>
+      <div class="r-entry" style="margin-bottom:0;">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">北京理工大学（继续教育学院）</span> ·
+            <span class="r-role">计算机科学与技术 · 大专</span>
+          </div>
+          <span class="r-date">2015.09 — 2018.06</span>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

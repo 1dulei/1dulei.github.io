@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ESSAYS } from '../../data/siteData';
+
+export function getStaticPaths() {
+  return ESSAYS.map((essay) => ({
+    params: { slug: essay.slug },
+    props: { essay },
+  }));
+}
+
+const { essay } = Astro.props;
+---
+
+<BaseLayout
+  title={`${essay.titleZh} · 杜雷`}
+  description={essay.summaryZh}
+  lang="zh-CN"
+  currentPath="/essays"
+  switchHref={`/en/essays/${essay.slug}/`}
+>
+  <article class="prose">
+    <div class="mono" style="font-size:12px;color:var(--subtle);margin-bottom:10px;">
+      {essay.date} · {essay.kindZh}
+    </div>
+    <h1>{essay.titleZh}</h1>
+    <p style="color:var(--muted);font-size:14px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+      {essay.summaryZh}
+    </p>
+
+    {essay.paragraphsZh.map((sec) => (
+      <div>
+        {sec.heading && <h3>{sec.heading}</h3>}
+        {sec.body && <p>{sec.body}</p>}
+        {sec.bullets && (
+          <ul>
+            {sec.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        )}
+        {sec.code && (
+          <pre><code>{sec.code}</code></pre>
+        )}
+      </div>
+    ))}
+
+    <div style="margin-top:44px;padding-top:18px;border-top:1px solid var(--border);font-size:13px;">
+      <a href="/essays/" style="color:var(--muted);">← 返回全部复盘与案例</a>
+    </div>
+  </article>
+</BaseLayout>

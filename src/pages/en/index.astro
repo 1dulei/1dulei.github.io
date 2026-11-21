@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MagicPortfolio from '../../components/MagicPortfolio.astro';
+import { PROFILE } from '../../data/siteData';
+---
+
+<BaseLayout
+  title={`${PROFILE.nameEn} · Senior Quality Engineer & AI Evaluation`}
+  description={PROFILE.heroBioEn}
+  lang="en"
+  currentPath="/"
+  switchHref="/"
+>
+  <MagicPortfolio lang="en" />
+</BaseLayout>

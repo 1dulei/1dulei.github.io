@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MagicPortfolio from '../components/MagicPortfolio.astro';
+import { PROFILE } from '../data/siteData';
+---
+
+<BaseLayout
+  title={`${PROFILE.nameZh} · 高级质量工程师 / AI 可靠性评测`}
+  description={PROFILE.heroBioZh}
+  lang="zh-CN"
+  currentPath="/"
+  switchHref="/en/"
+>
+  <MagicPortfolio lang="zh" />
+</BaseLayout>

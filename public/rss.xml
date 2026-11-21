@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>杜雷 · 测试实战复盘</title>
+    <link>https://1dulei.github.io/</link>
+    <description>记录多端测试左移、语义定位与接口被动检查、以及 AI 功能评测实践中的真实取舍与局限。</description>
+    <language>zh-cn</language>
+    <item>
+      <title>测教育问答助手与 AI 生图时，为什么单靠字词匹配拦不住逻辑颠倒</title>
+      <link>https://1dulei.github.io/essays/deterministic-evals-for-llm-apps/</link>
+      <pubDate>Wed, 18 Nov 2026 08:00:00 +0800</pubDate>
+      <description>复盘 AI 问答与生图测试中的提示词退化痛点，以及自查 EvalGate 发现的 3 个判错 bug 与修复。</description>
+    </item>
+    <item>
+      <title>为什么重型 Page-Object 框架两周就停摆，以及 TracePilot 的取舍</title>
+      <link>https://1dulei.github.io/essays/why-heavy-ai-frameworks-stall/</link>
+      <pubDate>Thu, 12 Nov 2026 08:00:00 +0800</pubDate>
+      <description>复盘从高维护选择器框架演进到语义定位优先、组件兼容降级与后台接口被动检查的过程。</description>
+    </item>
+    <item>
+      <title>单人盯四端迭代时怎么防漏测：SpecGate 的规则设计与难例复盘</title>
+      <link>https://1dulei.github.io/essays/shift-left-diff-gate/</link>
+      <pubDate>Wed, 04 Nov 2026 08:00:00 +0800</pubDate>
+      <description>11 条覆盖新增与删除行的确定性 diff 规则，以及补完 6 个难例后的真实成绩单与已知局限。</description>
+    </item>
+  </channel>
+</rss>

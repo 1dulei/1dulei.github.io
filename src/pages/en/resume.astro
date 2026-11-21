@@ -1,0 +1,374 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PROFILE } from '../../data/siteData';
+---
+
+<BaseLayout
+  title="Resume · Du Lei — Senior QA Engineer · AI Quality & Multi-Platform QA"
+  description="Resume of Du Lei: 8+ years in Multi-Platform Software QA, Shift-Left Gates, and AI Feature Evaluation."
+  lang="en"
+  currentPath="/resume"
+  switchHref="/resume/"
+  wide={true}
+>
+  <style>
+    .resume-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .toolbar-note {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .toolbar-btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .r-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: var(--pill-bg);
+      color: var(--pill-fg);
+      border: 1px solid transparent;
+    }
+
+    .r-btn.ghost {
+      background: var(--card);
+      color: var(--fg);
+      border-color: var(--border-strong);
+    }
+
+    .a4-sheet {
+      background: #ffffff;
+      color: #111827;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 38px 44px;
+      box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.1);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.48;
+    }
+
+    html.dark .a4-sheet {
+      background: #131316;
+      color: #f4f4f5;
+      border-color: #27272a;
+      box-shadow: 0 18px 42px -10px rgba(0, 0, 0, 0.65);
+    }
+
+    .r-header {
+      border-bottom: 2px solid #111827;
+      padding-bottom: 11px;
+      margin-bottom: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    html.dark .r-header {
+      border-bottom-color: #e4e4e7;
+    }
+
+    .r-name {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .r-target {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin-top: 4px;
+    }
+
+    html.dark .r-target {
+      color: #60a5fa;
+    }
+
+    .r-contact {
+      text-align: right;
+      font-size: 12px;
+      color: #4b5563;
+      line-height: 1.55;
+    }
+
+    html.dark .r-contact {
+      color: #a1a1aa;
+    }
+
+    .r-contact a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .r-sec {
+      margin-bottom: 13px;
+    }
+
+    .r-sec-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #d1d5db;
+      padding-bottom: 3px;
+      margin: 0 0 7px;
+    }
+
+    html.dark .r-sec-title {
+      border-bottom-color: #2e2e34;
+    }
+
+    .r-summary {
+      font-size: 12.2px;
+      color: #374151;
+      margin: 0;
+    }
+
+    html.dark .r-summary {
+      color: #d4d4d8;
+    }
+
+    .r-skill-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 12px;
+      color: #374151;
+    }
+
+    html.dark .r-skill-list {
+      color: #d4d4d8;
+    }
+
+    .r-skill-list li {
+      margin-bottom: 3.5px;
+    }
+
+    .r-entry {
+      margin-bottom: 10px;
+    }
+
+    .r-entry-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12.8px;
+    }
+
+    .r-org {
+      font-weight: 800;
+    }
+
+    .r-role {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    html.dark .r-role {
+      color: #d4d4d8;
+    }
+
+    .r-date {
+      font-size: 11.8px;
+      font-weight: 600;
+      color: #6b7280;
+      font-variant-numeric: tabular-nums;
+    }
+
+    html.dark .r-date {
+      color: #a1a1aa;
+    }
+
+    .r-bullets {
+      margin: 3.5px 0 0;
+      padding-left: 16px;
+      font-size: 12px;
+      color: #374151;
+    }
+
+    html.dark .r-bullets {
+      color: #d4d4d8;
+    }
+
+    .r-bullets li {
+      margin-bottom: 3px;
+    }
+
+    @media (max-width: 640px) {
+      .a4-sheet {
+        padding: 22px 18px;
+      }
+      .r-contact {
+        text-align: left;
+      }
+    }
+  </style>
+
+  <div class="resume-toolbar">
+    <span class="toolbar-note">
+      Phone redacted on public web view; download the 1-page PDF for full recruiter contact details.
+    </span>
+    <div class="toolbar-btns">
+      <a href={PROFILE.resumePdfEn} download class="r-btn">
+        ↓ Download 1-Page PDF
+      </a>
+      <a href="/resume/" class="r-btn ghost">
+        中文简历 →
+      </a>
+    </div>
+  </div>
+
+  <article class="a4-sheet">
+    <header class="r-header">
+      <div>
+        <h1 class="r-name">DU LEI</h1>
+        <div class="r-target">Senior QA Engineer · AI Quality Engineering &amp; Multi-Platform Test Architecture</div>
+      </div>
+      <div class="r-contact">
+        <div>8+ Years QA Experience ｜ Beijing, China (Phone in PDF)</div>
+        <div>
+          <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a> ｜
+          <a href={PROFILE.githubUrl} target="_blank" rel="noopener">github.com/1dulei</a> ｜
+          <a href={PROFILE.siteUrl} target="_blank" rel="noopener">{PROFILE.siteHost}</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">Summary</h2>
+      <p class="r-summary">
+        <strong>8+ years in Multi-Platform Software Quality Assurance &amp; Test Engineering</strong> (51Talk → Longfor Group → Hongben Tech). Experienced single-owner QA lead across Android learning tablets, dual Web consoles, backend APIs, and educational AI features. Focused on pragmatic defect prevention; re-implemented recurring QA pain points as three desensitized personal open-source tools: <strong>SpecGate</strong>, <strong>TracePilot</strong>, and <strong>EvalGate</strong>.
+      </p>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">Core QA Competencies</h2>
+      <ul class="r-skill-list">
+        <li><strong>AI Feature Evaluation &amp; Safety:</strong> End-to-end QA for in-house Q&amp;A Agents and AI image generation; textbook groundedness / hallucination checks, child-safety &amp; sensitive-prompt filtering, prompt-injection / jailbreak red-teaming, and prompt iteration regression diffs.</li>
+        <li><strong>Test Architecture &amp; Shift-Left QA:</strong> Multi-platform test strategy design, PRD state-machine &amp; permission boundary analysis, pre-staging Git diff risk walkthroughs, release sign-off gates, and production escape postmortems.</li>
+        <li><strong>API, Data &amp; Mobile Specialized QA:</strong> Deep RESTful API testing (auth bypass, idempotency, false-200 detection), Charles / Mitmproxy packet inspection &amp; weak-network simulation, MySQL data consistency checks, Redis validation, Android ADB / Monkey / Crash &amp; ANR triage, and offline sync verification.</li>
+        <li><strong>Pragmatic Automation &amp; Tooling:</strong> Python, Playwright, Pytest (semantic-locator flows &amp; passive API leak inspection), Linux log triage, Git, and GitHub Actions / GitLab CI quality gates.</li>
+      </ul>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">Professional Experience</h2>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">Hongben Technology</span> ·
+            <span class="r-role">Senior QA Engineer · Multi-Platform Quality &amp; AI Evaluation Lead</span>
+          </div>
+          <span class="r-date">May 2022 — Present · Beijing</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>0-to-1 Multi-Platform Quality System:</strong> Independently owned QA governance across Android learning tablets, dual Vue management consoles, and backend services—establishing staging entry criteria, tiered regression baselines, and release sign-off checklists across 100+ iterative releases.</li>
+          <li><strong>In-House AI Feature QA:</strong> Led release verification for the company's educational Q&amp;A assistant and AI image-generation features—testing textbook factual accuracy, child-safety compliance, unsafe prompt filtering, and prompt-injection defenses across prompt revisions.</li>
+          <li><strong>Shift-Left Risk Reviews:</strong> Moved QA engagement upstream into PRD reviews and pre-staging diff walkthroughs, catching leftover auth bypasses, duplicate deductions, and tablet offline progress overwrites before staging.</li>
+          <li><strong>Pragmatic Browser &amp; API Inspection:</strong> Replaced high-churn CSS-selector scripts with semantic-locator browser checks paired with API payload and storage inspection, catching leaked <code>payPwd</code> fields and <code>HTTP 200</code> masked business failures.</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">Longfor Group (HKEX: 0960)</span> ·
+            <span class="r-role">QA Engineer</span>
+          </div>
+          <span class="r-date">Apr 2020 — May 2022 · Beijing</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>Iterative Release QA:</strong> Owned full-cycle testing across enterprise Web management consoles and mobile apps, participating in requirement reviews, test planning, case design, and release sign-off.</li>
+          <li><strong>API &amp; Database Verification:</strong> Executed RESTful API integration tests (boundary cases, role permissions, fault handling) combined with Charles packet inspection and MySQL persistence verification for accurate defect triage.</li>
+          <li><strong>Regression Baseline Governance:</strong> Led cross-platform integration regression and post-release defect reviews to continuously strengthen core regression suites.</li>
+        </ul>
+      </div>
+
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">51Talk Online Education (NYSE: COE)</span> ·
+            <span class="r-role">QA Engineer</span>
+          </div>
+          <span class="r-date">May 2018 — Apr 2020 · Beijing</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>Real-Time Interactive Classroom QA:</strong> Tested 1v1 and small-group online classroom clients (Android / iOS / Web), covering bidirectional whiteboard sync, dynamic courseware, and live RTC audio/video stability.</li>
+          <li><strong>Weak-Network &amp; Mobile Compatibility:</strong> Executed packet-loss, jitter, and reconnect simulations alongside 40+ device compatibility matrices, collaborating on Crash/ANR log diagnosis to maintain low production crash rates.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-sec">
+      <h2 class="r-sec-title">Personal Open-Source QA Tools (Desensitized)</h2>
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">EvalGate</span> ·
+            <span class="r-role">Release Evaluation &amp; Red-Team Checks for LLM Features (Zero-Dep Python)</span>
+          </div>
+          <span class="r-date">github.com/1dulei/evalgate</span>
+        </div>
+        <ul class="r-bullets">
+          <li>Deterministic assertion matrix, optional <code>llm_judge</code> contradiction checks (reported as skipped when unconfigured), leak-before-refusal red-team checks, and snapshot regression diffs (<code>evalgate diff</code>); 11 unit tests including 6 self-review bug regressions.</li>
+        </ul>
+      </div>
+      <div class="r-entry">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">SpecGate &amp; TracePilot</span> ·
+            <span class="r-role">Pre-QA Diff Risk Gate + Semantic Browser Probe &amp; Passive API Checks</span>
+          </div>
+          <span class="r-date">github.com/1dulei</span>
+        </div>
+        <ul class="r-bullets">
+          <li><strong>SpecGate:</strong> PRD contract extractor (SHA-256 digest) &amp; 11 diff rules scanning both added and removed lines (10-case benchmark: 4/4 seed, 3/6 hard, known limits documented). <strong>TracePilot:</strong> Playwright semantic-locator probe with component fallbacks, popup capture, and configurable passive API/storage checks (7 tests passing).</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="r-sec" style="margin-bottom:0;">
+      <h2 class="r-sec-title">Education</h2>
+      <div class="r-entry" style="margin-bottom:3px;">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">Lanzhou Resources &amp; Environment Vocational University</span> ·
+            <span class="r-role">B.Eng. in Artificial Intelligence Engineering Technology (In Progress)</span>
+          </div>
+          <span class="r-date">2026.03 — 2028.06</span>
+        </div>
+      </div>
+      <div class="r-entry" style="margin-bottom:0;">
+        <div class="r-entry-head">
+          <div>
+            <span class="r-org">Beijing Institute of Technology (Continuing Education)</span> ·
+            <span class="r-role">Associate Degree in Computer Science &amp; Technology</span>
+          </div>
+          <span class="r-date">2015.09 — 2018.06</span>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>

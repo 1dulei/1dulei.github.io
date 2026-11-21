@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ESSAYS } from '../../data/siteData';
+---
+
+<BaseLayout
+  title="工程复盘 · 杜雷"
+  description="质量工程深度案例拆解、测试左移门禁与 AI 评测一线复盘。"
+  lang="zh-CN"
+  currentPath="/essays"
+  switchHref="/en/essays/"
+>
+  <div class="prose">
+    <span class="section-pill">Engineering Field Notes</span>
+    <h1>工程复盘与案例拆解</h1>
+    <p style="color:var(--muted);">
+      记录在多端研发交付与大模型业务落地中遇到的真实瓶颈、放弃过的重型方案，以及最终验证有效的确定性工程防线。
+    </p>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px;margin-top:28px;">
+    {ESSAYS.map((e) => (
+      <a
+        href={`/essays/${e.slug}/`}
+        style="display:block;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;box-shadow:var(--card-shadow);transition:border-color 0.15s ease;"
+      >
+        <div class="mono" style="font-size:12px;color:var(--muted);margin-bottom:6px;">
+          {e.date} · {e.kindZh} · {e.readTimeZh}
+        </div>
+        <h2 style="margin:0 0 8px;font-size:18px;font-weight:700;line-height:1.35;">{e.titleZh}</h2>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">{e.summaryZh}</p>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
